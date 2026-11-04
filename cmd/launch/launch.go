@@ -1485,9 +1485,10 @@ func hasLocalModel(inventory []LaunchModel, name string) bool {
 
 func (c *launcherClient) resolveRunModels(ctx context.Context, integration string, models []string) []LaunchModel {
 	recommendations := c.recommendations(ctx)
-	if integration == "codex" {
-		// Codex reads its /model choices from the generated catalog. Include
-		// installed tool-capable models as well as the requested starting model.
+	if integration == "codex" || integration == "kimi" {
+		// Codex reads its /model choices from a generated catalog and Kimi Code
+		// from config.toml. Include installed tool-capable models as well as the
+		// requested starting model.
 		if inventory, err := c.modelInventory().Load(ctx); err == nil {
 			cloudDisabled := false
 			if slices.ContainsFunc(inventory, func(model LaunchModel) bool { return model.Remote || isCloudModelName(model.Name) }) {
